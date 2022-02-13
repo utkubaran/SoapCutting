@@ -81,9 +81,9 @@ public class BoxCutterMovementController : MonoBehaviour
         isMoved = true;
         isPlaying = false;
         LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.5f);
-        EventManager.OnSoapLayerCompleted?.Invoke();
         layerCounter++;
         yield return new WaitForSeconds(0.6f);
+        EventManager.OnSoapLayerCompleted?.Invoke();
         
         if (layerCounter <= 2)
         {
