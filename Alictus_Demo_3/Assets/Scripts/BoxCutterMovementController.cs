@@ -20,7 +20,7 @@ public class BoxCutterMovementController : MonoBehaviour
 
     private Vector3 startPos;
 
-    private bool isPlaying;
+    private bool isPlaying, isMoved;
 
     private float layerDistance;
 
@@ -45,6 +45,7 @@ public class BoxCutterMovementController : MonoBehaviour
     {
         _transform = this.transform;
         isPlaying = true;
+        isMoved = false;
         startPos = _transform.position;
         layerDistance = (movementBorder - startPos.z);
         cutPerct = Mathf.Abs((movementBorder - _transform.position.z)/ layerDistance);
@@ -71,11 +72,21 @@ public class BoxCutterMovementController : MonoBehaviour
 
             if (_transform.position.z <= movementBorder)
             {
+                // MoveForNewLayer();
+                // LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.5f);
                 _transform.position = startPos + Vector3.down * layerThickness;
                 startPos = _transform.position;
                 layerCounter++;
                 EventManager.OnSoapLayerCompleted?.Invoke();
             }
         }
+    }
+
+    private void MoveForNewLayer()
+    {
+        if (isMoved) return;
+
+        isMoved = true;
+        LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.25f);
     }
 }
