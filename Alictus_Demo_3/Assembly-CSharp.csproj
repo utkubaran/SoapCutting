@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\SoapLayerController.cs" />
+     <Compile Include="Assets\Scripts\BoxCutterMovementController.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Users\baran\Desktop\Unity\2020.3.23f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
