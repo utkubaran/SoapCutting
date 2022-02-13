@@ -13,15 +13,33 @@ public class BoxCutterMovementController : MonoBehaviour
     [SerializeField]
     private float movementBorder = -1.1f;
 
+    [SerializeField]
+    private ParticleSystem cutVFX;
+
     private Transform _transform;
 
     private Vector3 startPos;
 
     private bool isPlaying;
 
-    private float layerDistance, cutPerct;
+    private float layerDistance;
+
+    private float cutPerct;
+    public float CutPerct { get { return cutPerct; } }
 
     private int layerCounter = 1;
+    
+    private void OnEnable()
+    {
+        EventManager.OnLevelStart.AddListener( () => isPlaying = true );
+        EventManager.OnLevelFinish.AddListener( () => isPlaying = false );
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnLevelStart.RemoveListener( () => isPlaying = true );
+        EventManager.OnLevelFinish.RemoveListener( () => isPlaying = false );
+    }  
 
     void Start()
     {
@@ -39,10 +57,15 @@ public class BoxCutterMovementController : MonoBehaviour
 
     private void MoveCutter()
     {
-        if (!isPlaying) return;
+        if (!isPlaying || !Input.GetMouseButton(0))
+        {
+            cutVFX.Stop();
+            return;
+        }
 
         if (Input.GetMouseButton(0))
         {
+            cutVFX.Play();
             _transform.position += Vector3.back * cutterMovementSpeed * Time.deltaTime;
             cutPerct = Mathf.Abs((movementBorder - _transform.position.z) / layerDistance);
 
@@ -51,12 +74,7 @@ public class BoxCutterMovementController : MonoBehaviour
                 _transform.position = startPos + Vector3.down * layerThickness;
                 startPos = _transform.position;
                 layerCounter++;
-
-                if (layerCounter > 3)
-                {
-                    Debug.Log("Game is finished!");
-                    // todo level finish event
-                }
+                EventManager.OnSoapLayerCompleted?.Invoke();
             }
         }
     }
