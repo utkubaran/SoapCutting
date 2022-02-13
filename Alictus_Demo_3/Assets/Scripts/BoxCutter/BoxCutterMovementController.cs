@@ -27,7 +27,7 @@ public class BoxCutterMovementController : MonoBehaviour
     private float cutPerct;
     public float CutPerct { get { return cutPerct; } }
 
-    private int layerCounter = 1;
+    private int layerCounter = 0;
     
     private void OnEnable()
     {
@@ -52,6 +52,7 @@ public class BoxCutterMovementController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(isPlaying);
         MoveCutter();
     }
 
@@ -63,8 +64,9 @@ public class BoxCutterMovementController : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && isPlaying)
         {
+            Debug.Log("can control");
             cutVFX.gameObject.SetActive(true);
             _transform.position += Vector3.back * cutterMovementSpeed * Time.deltaTime;
             cutPerct = (Mathf.Abs((movementBorder - _transform.position.z) / layerDistance) / 2f) + 0.5f;
@@ -82,8 +84,13 @@ public class BoxCutterMovementController : MonoBehaviour
         isPlaying = false;
         LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.5f);
         EventManager.OnSoapLayerCompleted?.Invoke();
+        layerCounter++;
         yield return new WaitForSeconds(0.6f);
-        isPlaying = true;
-        isMoved = false;
+        
+        if (layerCounter <= 2)
+        {
+            isPlaying = true;
+            isMoved = false;
+        }
     }
 }
