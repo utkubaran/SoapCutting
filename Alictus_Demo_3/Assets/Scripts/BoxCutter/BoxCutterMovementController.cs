@@ -52,7 +52,6 @@ public class BoxCutterMovementController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(isPlaying);
         MoveCutter();
     }
 
@@ -66,7 +65,6 @@ public class BoxCutterMovementController : MonoBehaviour
 
         if (Input.GetMouseButton(0) && isPlaying)
         {
-            Debug.Log("can control");
             cutVFX.gameObject.SetActive(true);
             _transform.position += Vector3.back * cutterMovementSpeed * Time.deltaTime;
             cutPerct = (Mathf.Abs((movementBorder - _transform.position.z) / layerDistance) / 2f) + 0.5f;
