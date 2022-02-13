@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BoxCutterMovementController : MonoBehaviour
@@ -71,12 +70,12 @@ public class BoxCutterMovementController : MonoBehaviour
 
             if (_transform.position.z <= movementBorder && !isMoved)
             {
-                StartCoroutine(MoveToTop());
+                StartCoroutine(MoveToInitialPosition());
             }
         }
     }
 
-    private IEnumerator MoveToTop()
+    private IEnumerator MoveToInitialPosition()
     {
         isMoved = true;
         isPlaying = false;
