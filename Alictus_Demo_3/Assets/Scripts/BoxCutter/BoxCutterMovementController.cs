@@ -44,7 +44,6 @@ public class BoxCutterMovementController : MonoBehaviour
     void Start()
     {
         _transform = this.transform;
-        isPlaying = true;
         isMoved = false;
         startPos = _transform.position;
         layerDistance = (movementBorder - startPos.z);
@@ -60,33 +59,31 @@ public class BoxCutterMovementController : MonoBehaviour
     {
         if (!isPlaying || !Input.GetMouseButton(0))
         {
-            cutVFX.Stop();
+            cutVFX.gameObject.SetActive(false);
             return;
         }
 
         if (Input.GetMouseButton(0))
         {
-            cutVFX.Play();
+            cutVFX.gameObject.SetActive(true);
             _transform.position += Vector3.back * cutterMovementSpeed * Time.deltaTime;
-            cutPerct = Mathf.Abs((movementBorder - _transform.position.z) / layerDistance);
+            cutPerct = (Mathf.Abs((movementBorder - _transform.position.z) / layerDistance) / 2f) + 0.5f;
 
-            if (_transform.position.z <= movementBorder)
+            if (_transform.position.z <= movementBorder && !isMoved)
             {
-                // MoveForNewLayer();
-                // LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.5f);
-                _transform.position = startPos + Vector3.down * layerThickness;
-                startPos = _transform.position;
-                layerCounter++;
-                EventManager.OnSoapLayerCompleted?.Invoke();
+                StartCoroutine(MoveToTop());
             }
         }
     }
 
-    private void MoveForNewLayer()
+    private IEnumerator MoveToTop()
     {
-        if (isMoved) return;
-
         isMoved = true;
-        LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.25f);
+        isPlaying = false;
+        LeanTween.move(this.gameObject, startPos + Vector3.down * layerThickness, 0.5f);
+        EventManager.OnSoapLayerCompleted?.Invoke();
+        yield return new WaitForSeconds(0.6f);
+        isPlaying = true;
+        isMoved = false;
     }
 }

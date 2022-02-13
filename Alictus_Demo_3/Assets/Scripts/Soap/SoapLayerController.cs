@@ -17,13 +17,11 @@ public class SoapLayerController : MonoBehaviour
     private void OnEnable()
     {
         EventManager.OnSoapLayerCompleted.AddListener(DisableLayer);
-        EventManager.OnSoapLayerCompleted.AddListener( () => soapLayerMeshRenderer = soapLayers[layerIndex].GetComponent<MeshRenderer>() );
     }
 
     private void OnDisable()
     {
         EventManager.OnSoapLayerCompleted.RemoveListener(DisableLayer);
-        EventManager.OnSoapLayerCompleted.RemoveListener( () => soapLayerMeshRenderer = soapLayers[layerIndex].GetComponent<MeshRenderer>() );
     }
 
     private void Start()
@@ -48,9 +46,9 @@ public class SoapLayerController : MonoBehaviour
             EventManager.OnLevelFinish?.Invoke();
             return;
         }
-
+        
         soapLayers[layerIndex].SetActive(false);
         layerIndex++;
+        soapLayerMeshRenderer = soapLayers[layerIndex].GetComponent<MeshRenderer>();
     }
-    
 }
